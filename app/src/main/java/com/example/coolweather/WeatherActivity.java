@@ -1,5 +1,6 @@
 package com.example.coolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -24,6 +25,7 @@ import com.example.coolweather.gson.AQI;
 import com.example.coolweather.gson.Forecast;
 import com.example.coolweather.gson.Lifestyle;
 import com.example.coolweather.gson.Weather;
+import com.example.coolweather.service.AutoUpdateService;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
 
@@ -158,7 +160,6 @@ public class WeatherActivity extends AppCompatActivity {
     public void requestWeather(final String weatherId,final String parentCity){
         String weatherUrl = "https://free-api.heweather.net/s6/weather?location=" +weatherId+"&key=2aa5062b550c4700aa97e45cc7714dc2";
         String aqiUrl = "https://free-api.heweather.net/s6/air/now?location=" + parentCity + "&key=2aa5062b550c4700aa97e45cc7714dc2";
-        Log.d("test", "weather "+weatherUrl);
 
         //解析aqiUrl
         HttpUtil.sendOkHttpRequest(aqiUrl, new Callback() {
@@ -293,6 +294,10 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         weatherLayout.setVisibility(View.VISIBLE);
+
+        //后台更新服务
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     /**
